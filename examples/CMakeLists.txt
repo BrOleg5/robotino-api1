@@ -1,0 +1,5 @@
+foreach(example print_sensors drive_square camera_dump)
+  add_executable(${example} ${example}.cpp)
+  target_link_libraries(${example} PRIVATE robotino_api1)
+  robotino_api1_warnings(${example})
+endforeach()
