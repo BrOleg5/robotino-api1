@@ -2,10 +2,10 @@
 
 An open-source client library for **Festo Robotino** robots of the generation before Robotino 3,
 the ones controlled with OpenRobotinoAPI 1.x (Robotino 3 and 4 use the different API2). It replaces
-[OpenRobotinoAPI](https://wiki.openrobotino.org/index.php?title=OpenRobotinoAPI) 1.x. That library
-was open source too, but its SVN repository is no longer available, and its build is outdated for
-modern systems: the published binaries are only for 32-bit x86 (Linux with Qt 4, or Windows with
-MSVC).
+[OpenRobotinoAPI](https://wiki.openrobotino.org/OpenRobotinoAPI.html) 1.x. That library was open
+source too, but its SVN repository (svn.openrobotino.org) is no longer available, and its build is
+outdated for modern systems: the published binaries are only for 32-bit x86 (Linux with Qt 4, or
+Windows with MSVC).
 
 - C++17, no dependencies: its own socket layer over BSD sockets and Winsock
 - Linux (x86_64, arm64) and Windows (MSVC, MinGW-w64)
@@ -131,7 +131,7 @@ Python module: `pip install .` (needs a C++17 compiler and CMake).
 ## Protocol
 
 See [docs/protocol.md](docs/protocol.md). It is based on the OpenRobotinoAPI sources published by
-REC GmbH ([openrobotino code, revision 23](https://sourceforge.net/p/openrobotino/code/23/tree/trunk/))
+REC GmbH ([openrobotino code, revision 23](https://svn.code.sf.net/p/openrobotino/code/trunk/?p=23))
 and the headers of OpenRobotinoAPI 1.8.54. [tools/pcap/pcap_extract.py](tools/pcap/pcap_extract.py)
 extracts messages from Wireshark captures; the test fixtures in [tests/data](tests/data) come from
 a capture of OpenRobotinoAPI 1.8.54 talking to a robot.

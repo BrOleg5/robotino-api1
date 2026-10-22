@@ -5,7 +5,7 @@ OpenRobotinoAPI 1.x. Checked against a robot with `iod` 695 and IO board firmwar
 
 Sources:
 - the OpenRobotinoAPI sources published by REC GmbH under LGPL 2.1:
-  [openrobotino code, revision 23](https://sourceforge.net/p/openrobotino/code/23/tree/trunk/),
+  [openrobotino code, revision 23](https://svn.code.sf.net/p/openrobotino/code/trunk/?p=23),
   directories `lib/rec/xcom`, `lib/rec/sercom`, `lib/rec/robotinocom`;
 - the headers of OpenRobotinoAPI 1.8.54 (`rec/iocontrol/remotestate/SetState.h`, `SensorState.h`,
   `rec/iocontrol/sercom/qdsa_protocol.h`);
