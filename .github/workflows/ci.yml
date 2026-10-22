@@ -34,7 +34,7 @@ jobs:
             os: macos-14
             cmake_args: ""
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_args }}
       - name: Build
@@ -50,8 +50,8 @@ jobs:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2022]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install
