@@ -1,4 +1,4 @@
-# robotino_api1
+# RobotinoAPI1
 
 An open-source client library for **Festo Robotino** robots of the generation before Robotino 3,
 the ones controlled with OpenRobotinoAPI 1.x (Robotino 3 and 4 use the different API2). It replaces
