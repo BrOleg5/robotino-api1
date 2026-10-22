@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
+#include <memory>
 #include <mutex>
 #include <thread>
 
@@ -17,6 +18,18 @@ using Clock = std::chrono::steady_clock;
 constexpr Milliseconds kPollSlice{50};
 constexpr Milliseconds kMinReconnectDelay{100};
 constexpr Milliseconds kMaxReconnectDelay{2000};
+
+// Callbacks are shared, not copied, under the mutex: copying a std::function copies the
+// target, which for a Python callable takes the GIL and deadlocks against a Python thread
+// that holds the GIL and waits for the mutex.
+template <class... Args>
+using Callback = std::shared_ptr<const std::function<void(Args...)>>;
+
+template <class... Args>
+Callback<Args...> make_callback(std::function<void(Args...)> f) {
+    return f ? std::make_shared<const std::function<void(Args...)>>(std::move(f)) : nullptr;
+}
+
 // Number of further UDP ports tried when the image port is taken.
 constexpr std::uint16_t kImagePortAttempts = 10;
 constexpr std::size_t kMaxDatagramSize = 65536;
@@ -73,11 +86,11 @@ struct Client::Impl {
     int odometry_restart_cycles = 0;
     Twist measured_velocity;
 
-    std::function<void(const SensorState&)> update_callback;
-    std::function<void(ConnectionState)> connection_callback;
-    std::function<void(const Error&)> error_callback;
-    std::function<void(const RobotInfo&)> info_callback;
-    std::function<void(const Image&)> image_callback;
+    Callback<const SensorState&> update_callback;
+    Callback<ConnectionState> connection_callback;
+    Callback<const Error&> error_callback;
+    Callback<const RobotInfo&> info_callback;
+    Callback<const Image&> image_callback;
 
     // I/O thread; stop is also read without the mutex.
     std::thread io_thread;
@@ -96,7 +109,7 @@ struct Client::Impl {
     // ---- helpers ----
 
     void set_state(ConnectionState s) {
-        std::function<void(ConnectionState)> cb;
+        Callback<ConnectionState> cb;
         {
             std::lock_guard<std::mutex> lock(mutex);
             if (state == s) {
@@ -106,18 +119,18 @@ struct Client::Impl {
             cb = connection_callback;
         }
         if (cb) {
-            cb(s);
+            (*cb)(s);
         }
     }
 
     void report(const Error& e) {
-        std::function<void(const Error&)> cb;
+        Callback<const Error&> cb;
         {
             std::lock_guard<std::mutex> lock(mutex);
             cb = error_callback;
         }
         if (cb) {
-            cb(e);
+            (*cb)(e);
         }
     }
 
@@ -157,7 +170,7 @@ struct Client::Impl {
     }
 
     void publish_status(const protocol::IOStatus& status) {
-        std::function<void(const SensorState&)> cb;
+        Callback<const SensorState&> cb;
         SensorState s = from_io_status(status);
         s.stamp = Clock::now();
         {
@@ -174,12 +187,12 @@ struct Client::Impl {
         }
         update_cv.notify_all();
         if (cb) {
-            cb(s);
+            (*cb)(s);
         }
     }
 
     void publish_info(const protocol::Info& msg) {
-        std::function<void(const RobotInfo&)> cb;
+        Callback<const RobotInfo&> cb;
         RobotInfo i{msg.text, msg.passive_mode};
         {
             std::lock_guard<std::mutex> lock(mutex);
@@ -187,7 +200,7 @@ struct Client::Impl {
             cb = info_callback;
         }
         if (cb) {
-            cb(i);
+            (*cb)(i);
         }
     }
 
@@ -359,7 +372,7 @@ struct Client::Impl {
             image.channels = data->header.channels;
             image.bits_per_channel = data->header.bits_per_channel;
             image.data = std::move(data->data);
-            std::function<void(const Image&)> cb;
+            Callback<const Image&> cb;
             {
                 std::lock_guard<std::mutex> lock(mutex);
                 latest_image = image;
@@ -367,7 +380,7 @@ struct Client::Impl {
                 cb = image_callback;
             }
             if (cb) {
-                cb(image);
+                (*cb)(image);
             }
         }
     }
@@ -595,28 +608,33 @@ bool Client::latest_image(Image& image) const {
 }
 
 void Client::on_update(std::function<void(const SensorState&)> callback) {
+    auto cb = make_callback(std::move(callback));
     std::lock_guard<std::mutex> lock(impl_->mutex);
-    impl_->update_callback = std::move(callback);
+    impl_->update_callback.swap(cb);
 }
 
 void Client::on_connection_changed(std::function<void(ConnectionState)> callback) {
+    auto cb = make_callback(std::move(callback));
     std::lock_guard<std::mutex> lock(impl_->mutex);
-    impl_->connection_callback = std::move(callback);
+    impl_->connection_callback.swap(cb);
 }
 
 void Client::on_error(std::function<void(const Error&)> callback) {
+    auto cb = make_callback(std::move(callback));
     std::lock_guard<std::mutex> lock(impl_->mutex);
-    impl_->error_callback = std::move(callback);
+    impl_->error_callback.swap(cb);
 }
 
 void Client::on_info(std::function<void(const RobotInfo&)> callback) {
+    auto cb = make_callback(std::move(callback));
     std::lock_guard<std::mutex> lock(impl_->mutex);
-    impl_->info_callback = std::move(callback);
+    impl_->info_callback.swap(cb);
 }
 
 void Client::on_image(std::function<void(const Image&)> callback) {
+    auto cb = make_callback(std::move(callback));
     std::lock_guard<std::mutex> lock(impl_->mutex);
-    impl_->image_callback = std::move(callback);
+    impl_->image_callback.swap(cb);
 }
 
 }  // namespace robotino_api1
