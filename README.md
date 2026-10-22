@@ -46,6 +46,10 @@ Commands stay in effect until changed; a background thread sends them every cycl
 default) and receives the readings. All methods are thread-safe. See
 [include/robotino_api1/client.hpp](include/robotino_api1/client.hpp) and [examples/](examples).
 
+On Windows, connecting to a host where nothing listens on the port fails with `Timeout`
+rather than `ConnectionRefused` unless `timeout` is longer than about 2 s: Windows retries the
+connection twice before reporting the refusal.
+
 With CMake, after installing:
 
 ```cmake

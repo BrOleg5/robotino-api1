@@ -66,8 +66,9 @@ def test_kinematics_round_trip():
 
 
 def test_errors(sim):
+    # Windows retransmits the SYN after a RST and reports the refusal only after ~2 s.
     with pytest.raises(robotino_api1.RobotinoError) as info:
-        robotino_api1.Client(host="127.0.0.1", port=1, timeout=0.3).connect()
+        robotino_api1.Client(host="127.0.0.1", port=1, timeout=5.0).connect()
     assert info.value.code == robotino_api1.ErrorCode.CONNECTION_REFUSED
 
     with make_client(sim):

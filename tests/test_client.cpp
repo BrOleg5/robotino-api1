@@ -150,7 +150,8 @@ TEST_CASE("Connection errors") {
         ClientOptions o;
         o.host = "127.0.0.1";
         o.port = port;
-        o.timeout = 300ms;
+        // Windows retransmits the SYN after a RST and reports the refusal only after ~2 s.
+        o.timeout = 5000ms;
         Client client(o);
         const Error e = client.connect();
         CHECK(e.code == ErrorCode::ConnectionRefused);
