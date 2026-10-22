@@ -1,0 +1,30 @@
+{
+    "name": "robotino-api1",
+    "build": {
+        "dockerfile": "../docker/Dockerfile",
+        "context": "..",
+        "args": {
+            "USERNAME": "dev"
+        }
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/src,type=bind",
+    "workspaceFolder": "/src",
+    "remoteUser": "dev",
+    "updateRemoteUserUID": true,
+    // Host network: access to the Robotino by IP.
+    "runArgs": ["--network=host"],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
+                "ms-python.python"
+            ],
+            "settings": {
+                "cmake.buildDirectory": "${workspaceFolder}/build/gcc",
+                "cmake.generator": "Ninja",
+                "C_Cpp.default.compileCommands": "${workspaceFolder}/build/gcc/compile_commands.json"
+            }
+        }
+    }
+}

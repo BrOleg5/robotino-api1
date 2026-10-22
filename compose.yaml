@@ -1,0 +1,18 @@
+# Development container for robotino-api1, see "Building" in README.md.
+# Example: docker compose run --rm dev scripts/build.sh test
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        USER_UID: ${UID:-1000}
+        USER_GID: ${GID:-1000}
+    image: robotino-api1-dev
+    # Host network: access to the Robotino by IP and to the emulator from host tools (Wireshark).
+    network_mode: host
+    stdin_open: true
+    tty: true
+    working_dir: /src
+    volumes:
+      - .:/src
