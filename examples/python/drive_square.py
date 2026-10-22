@@ -10,7 +10,7 @@ import robotino_api1
 
 
 def main():
-    host, _, port = (sys.argv[1] if len(sys.argv) > 1 else "172.26.1.0").partition(":")
+    host, _, port = (sys.argv[1] if len(sys.argv) > 1 else "172.26.1.1").partition(":")
     # command_timeout stops the robot if this script hangs or dies.
     with robotino_api1.Client(host=host, port=int(port or 80), command_timeout=0.5) as robot:
         speed = 0.1  # m/s

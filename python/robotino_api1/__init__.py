@@ -3,7 +3,7 @@
 Example:
     import robotino_api1
 
-    with robotino_api1.Client(host="172.26.1.0") as robot:
+    with robotino_api1.Client(host="172.26.1.1") as robot:
         robot.set_velocity(0.1, 0.0, 0.0)
         robot.wait_for_update(0.5)
         print(robot.sensors().battery_voltage)

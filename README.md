@@ -29,7 +29,7 @@ Windows with MSVC).
 #include <robotino_api1/client.hpp>
 
 robotino_api1::ClientOptions options;
-options.host = "172.26.1.0";                         // the robot's factory address
+options.host = "172.26.1.1";                         // the robot's factory address
 options.command_timeout = std::chrono::milliseconds(500);  // stop if the program hangs
 robotino_api1::Client robot(options);
 if (robotino_api1::Error e = robot.connect()) {
@@ -60,7 +60,7 @@ or as a subdirectory: `add_subdirectory(robotino_api1)`.
 ```python
 import robotino_api1
 
-with robotino_api1.Client(host="172.26.1.0", command_timeout=0.5) as robot:
+with robotino_api1.Client(host="172.26.1.1", command_timeout=0.5) as robot:
     robot.set_velocity(0.1, 0.0, 0.0)
     robot.wait_for_update(0.1)
     print(robot.sensors().distance_voltage, robot.pose)

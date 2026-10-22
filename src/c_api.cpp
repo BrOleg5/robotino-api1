@@ -72,7 +72,7 @@ void rapi1_options_init(rapi1_options* options) {
     }
     const robotino_api1::ClientOptions d;
     // The pointer stays valid: it refers to a string literal.
-    options->host = "172.26.1.0";
+    options->host = "172.26.1.1";
     options->port = d.port;
     options->cycle_ms = static_cast<uint32_t>(d.cycle.count());
     options->timeout_ms = static_cast<uint32_t>(d.timeout.count());

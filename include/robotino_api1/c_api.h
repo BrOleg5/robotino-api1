@@ -52,7 +52,7 @@ typedef enum rapi1_connection_state {
 typedef struct rapi1_client rapi1_client;
 
 typedef struct rapi1_options {
-    const char* host;        /* default "172.26.1.0" */
+    const char* host;        /* default "172.26.1.1" */
     uint16_t port;           /* default 80 */
     uint32_t cycle_ms;       /* default 20 */
     uint32_t timeout_ms;     /* default 1000 */

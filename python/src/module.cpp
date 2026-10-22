@@ -222,7 +222,7 @@ NB_MODULE(_core, m) {
                  }
                  new (self) PyClient(o);
              },
-             "host"_a = "172.26.1.0", "port"_a = 80, "cycle"_a = 0.02, "timeout"_a = 1.0, "auto_reconnect"_a = true,
+             "host"_a = "172.26.1.1", "port"_a = 80, "cycle"_a = 0.02, "timeout"_a = 1.0, "auto_reconnect"_a = true,
              "command_timeout"_a = 0.0, "image_port"_a = 8080, "drive_layout"_a = DriveLayout(), "reset_cycles"_a = 3,
              "Times are in seconds. command_timeout > 0 stops the motors when no velocity was set for that long.")
         .def("connect", [](PyClient& c) {

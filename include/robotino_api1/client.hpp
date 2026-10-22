@@ -26,7 +26,7 @@ namespace robotino_api1 {
 using Milliseconds = std::chrono::milliseconds;
 
 struct ClientOptions {
-    std::string host = "172.26.1.0";
+    std::string host = "172.26.1.1";
     std::uint16_t port = 80;
     // Period of the IOControl/IOStatus exchange. OpenRobotinoAPI uses 30 ms by default;
     // the IO board itself is read at about 55 Hz.

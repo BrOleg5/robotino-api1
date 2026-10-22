@@ -19,7 +19,7 @@ int main(void) {
     rapi1_error error;
 
     rapi1_options_init(&options);
-    CHECK(strcmp(options.host, "172.26.1.0") == 0);
+    CHECK(strcmp(options.host, "172.26.1.1") == 0);
     CHECK(options.port == 80);
 
     /* Nothing listens on port 1: the connection is refused quickly. */

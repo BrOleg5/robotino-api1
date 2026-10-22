@@ -16,7 +16,7 @@ Facts marked *unverified* are not confirmed by a capture or a robot yet.
 
 ## Transport
 
-- TCP, robot port 80 (the robot's factory address is 172.26.1.0). RobotinoSim listens on 8080+.
+- TCP, robot port 80 (the robot's factory address is 172.26.1.1). RobotinoSim listens on 8080+.
 - All multi-byte values are little-endian.
 - Every message is `[id: u8][length: u16][payload: length bytes]`, `length <= 32000`.
 
