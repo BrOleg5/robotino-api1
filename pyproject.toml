@@ -1,0 +1,32 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "nanobind>=2.0"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "robotino_api1"
+version = "0.1.0"
+description = "Open-source client library for Festo Robotino robots with OpenRobotinoAPI 1 (before Robotino 3)"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Robotics",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.scikit-build]
+build-dir = "build/python/{wheel_tag}"
+wheel.packages = ["python/robotino_api1"]
+cmake.build-type = "Release"
+
+[tool.scikit-build.cmake.define]
+ROBOTINO_API1_BUILD_PYTHON = "ON"
+ROBOTINO_API1_BUILD_SIM = "ON"
+ROBOTINO_API1_BUILD_TESTS = "OFF"
+ROBOTINO_API1_BUILD_EXAMPLES = "OFF"
+ROBOTINO_API1_BUILD_C_API = "OFF"
+ROBOTINO_API1_INSTALL = "OFF"
