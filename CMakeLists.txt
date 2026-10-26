@@ -17,6 +17,7 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(ROBOTINO_API1_BUILD_TESTS "Build tests" ${ROBOTINO_API1_TOP_LEVEL})
 option(ROBOTINO_API1_BUILD_SIM "Build the robot emulator" ${ROBOTINO_API1_TOP_LEVEL})
 option(ROBOTINO_API1_BUILD_EXAMPLES "Build examples" ${ROBOTINO_API1_TOP_LEVEL})
+option(ROBOTINO_API1_BUILD_HWCHECK "Build the hardware check programs" ${ROBOTINO_API1_TOP_LEVEL})
 option(ROBOTINO_API1_BUILD_C_API "Build the C API library" ON)
 option(ROBOTINO_API1_BUILD_PYTHON "Build the Python module (needs nanobind)" OFF)
 option(ROBOTINO_API1_INSTALL "Generate install rules" ${ROBOTINO_API1_TOP_LEVEL})
@@ -114,6 +115,10 @@ endif()
 
 if(ROBOTINO_API1_BUILD_EXAMPLES)
   add_subdirectory(examples)
+endif()
+
+if(ROBOTINO_API1_BUILD_HWCHECK)
+  add_subdirectory(tools/hwcheck)
 endif()
 
 if(ROBOTINO_API1_BUILD_PYTHON)

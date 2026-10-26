@@ -14,7 +14,7 @@ which are not checked yet.
    - Battery voltage matches the robot display; touching the bumper changes `bumper`; a hand in
      front of a distance sensor raises its voltage; sensor `i` is the one at `i * 40` deg.
    - Readings keep coming for minutes; no reconnects.
-2. **Motors**: `check_motors 172.26.1.1` (or `examples/python/check_motors.py`) runs each motor
+2. **Motors**: `check_motors 172.26.1.1` (or `tools/hwcheck/check_motors.py`) runs each motor
    at ±30 rad/s and prints PASS or FAIL for the checks below; watch which wheel turns.
    - The right wheel turns, the measured velocity has the same sign and is close to 30 rad/s.
    - The motor position grows in the same direction as the velocity (the protocol sends positions

@@ -133,6 +133,7 @@ CMake options:
 | `ROBOTINO_API1_BUILD_C_API` | `ON` | `robotino_api1_c` shared library |
 | `ROBOTINO_API1_BUILD_SIM` | top level | `robotino-api1-sim` |
 | `ROBOTINO_API1_BUILD_EXAMPLES` | top level | examples |
+| `ROBOTINO_API1_BUILD_HWCHECK` | top level | hardware checks of [docs/hardware-testing.md](docs/hardware-testing.md) |
 | `ROBOTINO_API1_BUILD_TESTS` | top level | tests (downloads doctest) |
 | `ROBOTINO_API1_BUILD_PYTHON` | `OFF` | Python module (needs nanobind), use `pip install .` instead |
 
