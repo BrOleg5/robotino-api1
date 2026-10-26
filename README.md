@@ -143,10 +143,12 @@ Python module: `pip install .` (needs a C++17 compiler and CMake).
 
 See [docs/protocol.md](docs/protocol.md). It is based on the OpenRobotinoAPI sources published by
 REC GmbH ([openrobotino code, revision 23](https://svn.code.sf.net/p/openrobotino/code/trunk/?p=23))
-and the headers of OpenRobotinoAPI 1.8.54 for Linux.
+and the headers of
+[OpenRobotinoAPI 1.8.54 for Linux](http://doc.openrobotino.org/download/packages/OpenRobotino1-1.8.54-Linux.deb).
 [tools/pcap/pcap_extract.py](tools/pcap/pcap_extract.py) extracts messages from Wireshark
 captures; the test fixtures in [tests/data](tests/data) come from captures of OpenRobotinoAPI
-1.8.31 for Windows talking to a robot.
+1.8.31 for Windows talking to a robot (its installer is no longer published, see
+[OpenRobotinoAPI](https://wiki.openrobotino.org/OpenRobotinoAPI.html)).
 
 ## License
 

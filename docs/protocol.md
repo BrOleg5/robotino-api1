@@ -7,10 +7,13 @@ Sources:
 - the OpenRobotinoAPI sources published by REC GmbH under LGPL 2.1:
   [openrobotino code, revision 23](https://svn.code.sf.net/p/openrobotino/code/trunk/?p=23),
   directories `lib/rec/xcom`, `lib/rec/sercom`, `lib/rec/robotinocom`;
-- the headers of OpenRobotinoAPI 1.8.54 for Linux (`rec/iocontrol/remotestate/SetState.h`,
-  `SensorState.h`, `rec/iocontrol/sercom/qdsa_protocol.h`);
+- the headers of
+  [OpenRobotinoAPI 1.8.54 for Linux](http://doc.openrobotino.org/download/packages/OpenRobotino1-1.8.54-Linux.deb)
+  (`rec/iocontrol/remotestate/SetState.h`, `SensorState.h`, `rec/iocontrol/sercom/qdsa_protocol.h`);
 - Wireshark captures of OpenRobotinoAPI 1.8.31 for Windows talking to a robot; the messages in
-  [tests/data](../tests/data) come from them.
+  [tests/data](../tests/data) come from them. Its installer is no longer published: the
+  [OpenRobotinoAPI](https://wiki.openrobotino.org/OpenRobotinoAPI.html) page links to a download
+  section that was removed.
 
 Facts marked *unverified* are not confirmed by a capture or a robot yet.
 
