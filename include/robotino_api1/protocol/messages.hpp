@@ -3,7 +3,7 @@
 // Every message is [id: u8][payload length: u16][payload], all values little-endian.
 // A session: the client connects and sends IOControl and CameraControl; the robot sends Info
 // once and then answers every IOControl with an IOStatus. Without IOControl the robot stops
-// the motors almost at once but keeps the connection open (checked for 3 s).
+// the motors after about 0.2 s and closes the connection after about 2 s.
 #pragma once
 
 #include <array>

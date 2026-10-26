@@ -22,9 +22,9 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
    - kill the program: the robot stops at once (the OS closes the TCP connection and the robot
      sees it; neither timeout is involved);
    - freeze the program (Ctrl+Z or `kill -STOP` on Linux, "Suspend process" in Resource Monitor
-     on Windows): the connection stays open but IOControl stops; the robot stops almost at once
-     (robot side motor watchdog, well under 0.5 s). Resume it after 3 s (`fg`): the program
-     continues without errors, since the robot keeps the connection open;
+     on Windows): the connection stays open but IOControl stops; the robot stops within about
+     0.2 s (robot side motor watchdog) and closes the connection about 2 s after the last
+     IOControl. Resume it after 3 s (`fg`): the client reports `connection closed` and reconnects;
    - with `command_timeout = 0.5 s`, stop calling `set_velocity` while the program keeps running:
      the motors stop after 0.5 s;
    - disconnect the PC from the robot's Wi-Fi for 5 s: the robot stops almost at once; the client
@@ -32,7 +32,7 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
      1 s connect timeout) and reconnects within about 3 s after the PC rejoins, without
      `ConnectionBusy`.
 4. **Second client**: connect a second program while the first one runs: it gets
-   `ConnectionBusy` or `passive_mode == true`. Note which one.
+   `ConnectionBusy` or `passive_mode == true`. Note which one (a capture showed passive mode).
 5. **Driving** (robot on the floor): `drive_square 172.26.1.1`. The robot drives a square of about
    0.5 m without turning; compare the odometry with a tape measure. If the sides are too short or
    long, check `DriveLayout::base_radius` (125 mm in OpenRobotinoAPI, 132 mm in the robot's

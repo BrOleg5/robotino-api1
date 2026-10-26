@@ -3,8 +3,8 @@
 // Motors follow their setpoints with a first-order lag and integrate their positions;
 // the other readings come from a configurable SensorState. With an image request it sends a
 // synthetic raw RGB image over UDP. Only one client controls it at a time, others receive
-// ConnectionBusy. Unlike the robot, it drops a client that is silent for 2 s, so that a dead
-// client does not hold it.
+// ConnectionBusy (the robot serves them in passive mode). Like the robot, it drops a client that
+// is silent for 2 s.
 #pragma once
 
 #include <atomic>
