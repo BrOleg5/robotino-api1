@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdio>
 #include <cstdlib>
 #include <string>
 
@@ -17,4 +18,14 @@ inline robotino_api1::ClientOptions options_from_args(int argc, char** argv) {
         }
     }
     return options;
+}
+
+// Prints errors and connection changes reported by the background thread, such as reconnects.
+inline void print_connection_events(robotino_api1::Client& robot) {
+    robot.on_error([](const robotino_api1::Error& e) {
+        std::fprintf(stderr, "error: %s: %s\n", robotino_api1::to_string(e.code), e.message.c_str());
+    });
+    robot.on_connection_changed([](robotino_api1::ConnectionState state) {
+        std::fprintf(stderr, "connection: %s\n", robotino_api1::to_string(state));
+    });
 }

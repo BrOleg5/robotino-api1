@@ -9,9 +9,17 @@ import time
 import robotino_api1
 
 
+def print_connection_events(robot):
+    """Prints errors and connection changes reported by the background thread, such as reconnects."""
+    robot.on_error(lambda code, message: print(f"error: {code.name}: {message}", file=sys.stderr))
+    robot.on_connection_changed(lambda state: print(f"connection: {state.name}", file=sys.stderr))
+
+
 def main():
     host, _, port = (sys.argv[1] if len(sys.argv) > 1 else "172.26.1.1").partition(":")
-    with robotino_api1.Client(host=host, port=int(port or 80)) as robot:
+    robot = robotino_api1.Client(host=host, port=int(port or 80))
+    print_connection_events(robot)
+    with robot:
         print(robot.info)
         for _ in range(20):
             robot.wait_for_update(0.5)

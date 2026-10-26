@@ -7,6 +7,7 @@
 
 int main(int argc, char** argv) {
     robotino_api1::Client robot(options_from_args(argc, argv));
+    print_connection_events(robot);
     if (robotino_api1::Error e = robot.connect()) {
         std::fprintf(stderr, "connect: %s\n", e.message.c_str());
         return 1;
