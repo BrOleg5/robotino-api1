@@ -27,6 +27,8 @@ def main():
             print("passive mode: another client controls the robot")
         for _ in range(20):
             robot.wait_for_update(0.5)
+            if robot.connection_state == robotino_api1.ConnectionState.DISCONNECTED:
+                sys.exit(1)  # a passive session ends when the controlling client leaves
             s = robot.sensors()
             distances = " ".join(f"{v:.2f}" for v in s.distance_voltage)
             print(f"battery {s.battery_voltage:.2f} V | bumper {s.bumper} | "

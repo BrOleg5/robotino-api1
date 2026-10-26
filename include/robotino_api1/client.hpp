@@ -37,7 +37,9 @@ struct ClientOptions {
     // does not retry.
     bool auto_reconnect = true;
     // Accept a session in passive mode (another client controls the robot: readings arrive,
-    // commands are ignored). Otherwise passive mode is reported as ConnectionBusy.
+    // commands are ignored). Otherwise passive mode is reported as ConnectionBusy. When the
+    // controlling client leaves, the readings stop changing: after `timeout` the session ends
+    // with ConnectionClosed and is not reconnected.
     bool allow_passive = false;
     // Stop the motors if no velocity was set for this long; 0 disables the watchdog.
     Milliseconds command_timeout{0};

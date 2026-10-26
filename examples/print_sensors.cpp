@@ -22,6 +22,9 @@ int main(int argc, char** argv) {
 
     for (int i = 0; i < 20; ++i) {
         robot.wait_for_update(std::chrono::milliseconds(500));
+        if (robot.connection_state() == robotino_api1::ConnectionState::Disconnected) {
+            return 1;  // a passive session ends when the controlling client leaves
+        }
         const robotino_api1::SensorState s = robot.sensors();
         std::printf("battery %.2f V %.2f A | bumper %d | position %d %d %d | distance V:", s.battery_voltage,
                     s.battery_current, s.bumper, s.motor_position[0], s.motor_position[1], s.motor_position[2]);

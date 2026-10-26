@@ -96,6 +96,12 @@ struct Client::Impl {
     std::thread io_thread;
     std::atomic<bool> stop{false};
 
+    // I/O thread only. In passive mode the robot passes on the readings of the controlling
+    // session; when that client leaves, it repeats the last ones and the board time stops.
+    std::uint32_t passive_board_time = 0;
+    Clock::time_point passive_board_time_changed{};
+    bool controller_left = false;
+
     // Camera thread and its socket (owned by the thread while it runs).
     std::mutex camera_mutex;  // serializes set_camera_streaming()
     std::thread camera_thread;
@@ -247,6 +253,18 @@ struct Client::Impl {
                             return Error(ErrorCode::ConnectionBusy,
                                          "the robot is controlled by another client (passive mode)");
                         }
+                        if (status->passive_mode) {
+                            const std::uint32_t board_time = status->q2p.slaves[0].time;
+                            const auto now = Clock::now();
+                            if (passive_board_time_changed == Clock::time_point{} || board_time != passive_board_time) {
+                                passive_board_time = board_time;
+                                passive_board_time_changed = now;
+                            } else if (now - passive_board_time_changed > options.timeout) {
+                                controller_left = true;
+                                return Error(ErrorCode::ConnectionClosed,
+                                             "the controlling client left, passive mode readings no longer change");
+                            }
+                        }
                         publish_status(*status);
                         return {};
                     }
@@ -285,6 +303,8 @@ struct Client::Impl {
 
     Error establish(net::TcpStream& stream, protocol::MessageParser& parser) {
         parser.reset();
+        passive_board_time_changed = {};
+        controller_left = false;
         {
             std::lock_guard<std::mutex> lock(mutex);
             camera_settings_dirty = true;  // the robot expects CameraControl in every session
@@ -341,7 +361,8 @@ struct Client::Impl {
                 }
                 report(e);
                 stream.close();
-                if (!options.auto_reconnect) {
+                // A new connection would take control of the robot: leave that to the user.
+                if (!options.auto_reconnect || controller_left) {
                     break;
                 }
             }

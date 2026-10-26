@@ -199,6 +199,15 @@ TEST_CASE("A second client with allow_passive reads but does not control") {
     std::this_thread::sleep_for(100ms);
     CHECK(s.command().motor_velocity[1] == 0.0);
     CHECK(eventually([&] { return second.sensors().motor_velocity[0] < -10.0; }));
+
+    // The passive session ends when the controlling client leaves.
+    std::atomic<int> closed{0};
+    second.on_error([&](const Error& e) { closed += e.code == ErrorCode::ConnectionClosed; });
+    std::this_thread::sleep_for(o.timeout * 2);
+    CHECK(second.connection_state() == ConnectionState::Connected);
+    first.disconnect();
+    CHECK(eventually([&] { return second.connection_state() == ConnectionState::Disconnected; }));
+    CHECK(closed == 1);
 }
 
 TEST_CASE("Client reconnects after the connection is lost") {
