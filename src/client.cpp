@@ -243,6 +243,10 @@ struct Client::Impl {
                         if (!status) {
                             return Error(ErrorCode::ProtocolError, "malformed IOStatus");
                         }
+                        if (status->passive_mode && !options.allow_passive) {
+                            return Error(ErrorCode::ConnectionBusy,
+                                         "the robot is controlled by another client (passive mode)");
+                        }
                         publish_status(*status);
                         return {};
                     }

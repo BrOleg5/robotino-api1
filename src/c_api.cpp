@@ -82,6 +82,7 @@ void rapi1_options_init(rapi1_options* options) {
     options->base_radius = d.drive_layout.base_radius;
     options->wheel_radius = d.drive_layout.wheel_radius;
     options->gear_ratio = d.drive_layout.gear_ratio;
+    options->allow_passive = d.allow_passive ? 1 : 0;
 }
 
 rapi1_client* rapi1_client_create(const rapi1_options* options) {
@@ -105,6 +106,7 @@ rapi1_client* rapi1_client_create(const rapi1_options* options) {
     co.drive_layout.base_radius = o.base_radius;
     co.drive_layout.wheel_radius = o.wheel_radius;
     co.drive_layout.gear_ratio = o.gear_ratio;
+    co.allow_passive = o.allow_passive != 0;
     try {
         return new rapi1_client(co);
     } catch (...) {

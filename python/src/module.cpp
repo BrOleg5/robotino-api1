@@ -206,7 +206,7 @@ NB_MODULE(_core, m) {
         .def("__init__",
              [](PyClient* self, const std::string& host, std::uint16_t port, double cycle, double timeout,
                 bool auto_reconnect, double command_timeout, std::uint16_t image_port, const DriveLayout& drive_layout,
-                int reset_cycles) {
+                int reset_cycles, bool allow_passive) {
                  ClientOptions o;
                  o.host = host;
                  o.port = port;
@@ -217,6 +217,7 @@ NB_MODULE(_core, m) {
                  o.image_port = image_port;
                  o.drive_layout = drive_layout;
                  o.reset_cycles = reset_cycles;
+                 o.allow_passive = allow_passive;
                  if (o.cycle.count() == 0 || o.timeout.count() == 0) {
                      throw nb::value_error("cycle and timeout must be positive");
                  }
@@ -224,7 +225,9 @@ NB_MODULE(_core, m) {
              },
              "host"_a = "172.26.1.1", "port"_a = 80, "cycle"_a = 0.02, "timeout"_a = 1.0, "auto_reconnect"_a = true,
              "command_timeout"_a = 0.0, "image_port"_a = 8080, "drive_layout"_a = DriveLayout(), "reset_cycles"_a = 3,
-             "Times are in seconds. command_timeout > 0 stops the motors when no velocity was set for that long.")
+             "allow_passive"_a = false,
+             "Times are in seconds. command_timeout > 0 stops the motors when no velocity was set for that long.\n"
+             "Without allow_passive, a robot controlled by another client raises CONNECTION_BUSY.")
         .def("connect", [](PyClient& c) {
             Error e;
             {

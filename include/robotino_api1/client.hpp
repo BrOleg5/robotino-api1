@@ -36,6 +36,9 @@ struct ClientOptions {
     // Reconnect after the connection is lost, retrying while the robot is busy. connect() itself
     // does not retry.
     bool auto_reconnect = true;
+    // Accept a session in passive mode (another client controls the robot: readings arrive,
+    // commands are ignored). Otherwise passive mode is reported as ConnectionBusy.
+    bool allow_passive = false;
     // Stop the motors if no velocity was set for this long; 0 disables the watchdog.
     Milliseconds command_timeout{0};
     // Local UDP port for camera images; the next free port is used if it is taken.
