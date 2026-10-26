@@ -46,6 +46,11 @@ Commands stay in effect until changed; a background thread sends them every cycl
 default) and receives the readings. All methods are thread-safe. See
 [include/robotino_api1/client.hpp](include/robotino_api1/client.hpp) and [examples/](examples).
 
+Only one client controls the robot. The robot serves a second one in passive mode (readings
+arrive, commands are ignored); `connect()` reports this as `ConnectionBusy` unless
+`allow_passive` is set. After a lost connection the client keeps retrying while the robot is
+busy, since the robot holds a lost session for about 2 s.
+
 On Windows, connecting to a host where nothing listens on the port fails with `Timeout`
 rather than `ConnectionRefused` unless `timeout` is longer than about 2 s: Windows retries the
 connection twice before reporting the refusal.

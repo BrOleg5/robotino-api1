@@ -31,8 +31,9 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
      reports `timeout` errors, retries the connection with growing delays (at most 2 s plus the
      1 s connect timeout) and reconnects within about 3 s after the PC rejoins, without
      `ConnectionBusy`.
-4. **Second client**: connect a second program while the first one runs: it gets
-   `ConnectionBusy` or `passive_mode == true`. Note which one (a capture showed passive mode).
+4. **Second client**: start a second `drive_square` while the first one runs: its `connect()`
+   fails with `ConnectionBusy` (the robot serves it in passive mode), and the first one keeps
+   driving.
 5. **Driving** (robot on the floor): `drive_square 172.26.1.1`. The robot drives a square of about
    0.5 m without turning; compare the odometry with a tape measure. If the sides are too short or
    long, check `DriveLayout::base_radius` (125 mm in OpenRobotinoAPI, 132 mm in the robot's
