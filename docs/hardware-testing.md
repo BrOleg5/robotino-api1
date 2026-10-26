@@ -27,8 +27,10 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
      continues without errors, since the robot keeps the connection open;
    - with `command_timeout = 0.5 s`, stop calling `set_velocity` while the program keeps running:
      the motors stop after 0.5 s;
-   - unplug the network for 5 s: the robot stops almost at once; the client reports errors and
-     reconnects.
+   - disconnect the PC from the robot's Wi-Fi for 5 s: the robot stops almost at once; the client
+     reports `timeout` errors, retries the connection with growing delays (at most 2 s plus the
+     1 s connect timeout) and reconnects within about 3 s after the PC rejoins, without
+     `ConnectionBusy`.
 4. **Second client**: connect a second program while the first one runs: it gets
    `ConnectionBusy` or `passive_mode == true`. Note which one.
 5. **Driving** (robot on the floor): `drive_square 172.26.1.1`. The robot drives a square of about
