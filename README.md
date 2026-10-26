@@ -16,10 +16,10 @@ Windows with MSVC).
 - Robot emulator for development and tests without a robot
 
 > **Status.** The protocol was checked byte for byte against traffic between OpenRobotinoAPI
-> 1.8.54 and a real robot. The following still has to be verified on a robot: the motion
-> commands, the camera stream (no capture with images is available) and the meaning of the last
-> 20 bytes of the IOControl message (see [docs/protocol.md](docs/protocol.md)). The checklist is in
-> [docs/hardware-testing.md](docs/hardware-testing.md).
+> 1.8.31 for Windows and a real robot. The following still has to be verified on a robot: the
+> motion commands, the camera stream (no capture with images is available) and the meaning of the
+> last 20 bytes of the IOControl message (see [docs/protocol.md](docs/protocol.md)). The checklist
+> is in [docs/hardware-testing.md](docs/hardware-testing.md).
 
 ## Usage
 
@@ -142,9 +142,10 @@ Python module: `pip install .` (needs a C++17 compiler and CMake).
 
 See [docs/protocol.md](docs/protocol.md). It is based on the OpenRobotinoAPI sources published by
 REC GmbH ([openrobotino code, revision 23](https://svn.code.sf.net/p/openrobotino/code/trunk/?p=23))
-and the headers of OpenRobotinoAPI 1.8.54. [tools/pcap/pcap_extract.py](tools/pcap/pcap_extract.py)
-extracts messages from Wireshark captures; the test fixtures in [tests/data](tests/data) come from
-a capture of OpenRobotinoAPI 1.8.54 talking to a robot.
+and the headers of OpenRobotinoAPI 1.8.54 for Linux.
+[tools/pcap/pcap_extract.py](tools/pcap/pcap_extract.py) extracts messages from Wireshark
+captures; the test fixtures in [tests/data](tests/data) come from captures of OpenRobotinoAPI
+1.8.31 for Windows talking to a robot.
 
 ## License
 

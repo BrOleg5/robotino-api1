@@ -7,10 +7,10 @@ Sources:
 - the OpenRobotinoAPI sources published by REC GmbH under LGPL 2.1:
   [openrobotino code, revision 23](https://svn.code.sf.net/p/openrobotino/code/trunk/?p=23),
   directories `lib/rec/xcom`, `lib/rec/sercom`, `lib/rec/robotinocom`;
-- the headers of OpenRobotinoAPI 1.8.54 (`rec/iocontrol/remotestate/SetState.h`, `SensorState.h`,
-  `rec/iocontrol/sercom/qdsa_protocol.h`);
-- a Wireshark capture of OpenRobotinoAPI 1.8.54 talking to a robot; the messages in
-  [tests/data](../tests/data) come from it.
+- the headers of OpenRobotinoAPI 1.8.54 for Linux (`rec/iocontrol/remotestate/SetState.h`,
+  `SensorState.h`, `rec/iocontrol/sercom/qdsa_protocol.h`);
+- Wireshark captures of OpenRobotinoAPI 1.8.31 for Windows talking to a robot; the messages in
+  [tests/data](../tests/data) come from them.
 
 Facts marked *unverified* are not confirmed by a capture or a robot yet.
 
@@ -68,7 +68,7 @@ ConnectionBusy; this was not seen in captures.
 | 9 | 47 | P2Q frame, see below |
 | 56 | 20 | see below |
 
-The last 20 bytes are zeros in the r23 sources, but OpenRobotinoAPI 1.8.54 sends
+The last 20 bytes are zeros in the r23 sources, but OpenRobotinoAPI 1.8.31 sends
 `00×13 00 00 80 3f 00 00 00`, i.e. `1.0f` at offset 69. Their layout, from a capture of
 `Odometry::set()` and `NorthStar::setCeilingCal()` calls:
 
