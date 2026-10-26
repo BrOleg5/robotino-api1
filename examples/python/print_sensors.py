@@ -17,10 +17,14 @@ def print_connection_events(robot):
 
 def main():
     host, _, port = (sys.argv[1] if len(sys.argv) > 1 else "172.26.1.1").partition(":")
-    robot = robotino_api1.Client(host=host, port=int(port or 80))
+    # Only reads, so it also works while another program controls the robot.
+    robot = robotino_api1.Client(host=host, port=int(port or 80), allow_passive=True)
     print_connection_events(robot)
     with robot:
         print(robot.info)
+        robot.wait_for_update(0.5)
+        if robot.sensors().passive_mode:
+            print("passive mode: another client controls the robot")
         for _ in range(20):
             robot.wait_for_update(0.5)
             s = robot.sensors()
