@@ -95,14 +95,54 @@ void Simulator::serve() {
     net::TcpStream client;
     protocol::MessageParser parser;
     Clock::time_point last_message;
+    // A second client, served in passive mode: it gets the readings, its commands are ignored.
+    net::TcpStream watcher;
+    protocol::MessageParser watcher_parser;
+    Clock::time_point watcher_last_message;
     std::uint8_t buffer[4096];
 
     while (!stop_) {
-        // Refuse other clients while one is connected, accept a new one otherwise.
+        if (watcher.connected()) {
+            const net::IoResult w = watcher.recv(buffer, sizeof buffer, std::chrono::milliseconds(0));
+            bool drop_watcher = w.status == net::IoStatus::Closed || w.status == net::IoStatus::Error;
+            if (w.status == net::IoStatus::Ok) {
+                watcher_parser.feed(buffer, w.bytes);
+                watcher_last_message = Clock::now();
+            }
+            while (auto msg = watcher_parser.next()) {
+                if (msg->message_id() != protocol::MessageId::IOControl) {
+                    continue;
+                }
+                std::vector<std::uint8_t> out;
+                {
+                    std::lock_guard<std::mutex> lock(mutex_);
+                    SensorState st = state_;
+                    st.passive_mode = true;
+                    out = protocol::encode(to_io_status(st));
+                }
+                if (!paused_ && watcher.send_all(out.data(), out.size(), kSlice)) {
+                    drop_watcher = true;
+                }
+            }
+            if (drop_watcher || watcher_parser.error() || Clock::now() - watcher_last_message > options_.idle_timeout) {
+                watcher.close();
+            }
+        }
+        // While a client is connected, serve another one in passive mode (or refuse it with
+        // ConnectionBusy); accept a new controlling client otherwise.
         net::TcpStream incoming;
         const auto accept_timeout = client.connected() ? std::chrono::milliseconds(0) : kSlice;
         if (listener_->tcp.accept(incoming, accept_timeout).status == net::IoStatus::Ok) {
-            if (client.connected()) {
+            if (client.connected() && !options_.busy_message && !watcher.connected()) {
+                watcher = std::move(incoming);
+                watcher_parser.reset();
+                watcher_last_message = Clock::now();
+                protocol::Info info;
+                info.text = options_.info_text;
+                info.passive_mode = true;
+                const auto out = protocol::encode(info);
+                watcher.send_all(out.data(), out.size(), kSlice);
+            } else if (client.connected()) {
                 const auto busy = protocol::encode_empty(protocol::MessageId::ConnectionBusy);
                 incoming.send_all(busy.data(), busy.size(), kSlice);
                 // Closing with unread input would reset the connection and could discard

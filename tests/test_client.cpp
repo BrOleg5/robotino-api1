@@ -165,14 +165,40 @@ TEST_CASE("Connection errors") {
         CHECK(client.connect().code == ErrorCode::HostNotFound);
     }
     SUBCASE("busy") {
-        sim::Simulator s(sim_options());
+        sim::SimulatorOptions so = sim_options();
+        SUBCASE("passive mode") {}
+        SUBCASE("ConnectionBusy message") { so.busy_message = true; }
+        sim::Simulator s(so);
         REQUIRE_FALSE(s.start());
         Client first(client_options(s));
         REQUIRE_FALSE(first.connect());
         Client second(client_options(s));
         CHECK(second.connect().code == ErrorCode::ConnectionBusy);
+        CHECK(second.connection_state() == ConnectionState::Disconnected);
         CHECK(first.connection_state() == ConnectionState::Connected);
     }
+}
+
+TEST_CASE("A second client with allow_passive reads but does not control") {
+    sim::Simulator s(sim_options());
+    REQUIRE_FALSE(s.start());
+    Client first(client_options(s));
+    REQUIRE_FALSE(first.connect());
+    ClientOptions o = client_options(s);
+    o.allow_passive = true;
+    Client second(o);
+    REQUIRE_FALSE(second.connect());
+    CHECK(second.info().passive_mode);
+    CHECK(second.wait_for_update(1000ms));
+    CHECK(second.sensors().passive_mode);
+    CHECK_FALSE(first.sensors().passive_mode);
+
+    second.set_motor_velocities({20.0, 20.0, 20.0});
+    first.set_motor_velocities({-20.0, 0.0, 0.0});
+    CHECK(eventually([&] { return s.command().motor_velocity[0] < 0.0; }));
+    std::this_thread::sleep_for(100ms);
+    CHECK(s.command().motor_velocity[1] == 0.0);
+    CHECK(eventually([&] { return second.sensors().motor_velocity[0] < -10.0; }));
 }
 
 TEST_CASE("Client reconnects after the connection is lost") {

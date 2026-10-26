@@ -2,9 +2,9 @@
 //
 // Motors follow their setpoints with a first-order lag and integrate their positions;
 // the other readings come from a configurable SensorState. With an image request it sends a
-// synthetic raw RGB image over UDP. Only one client controls it at a time, others receive
-// ConnectionBusy (the robot serves them in passive mode). Like the robot, it drops a client that
-// is silent for 2 s.
+// synthetic raw RGB image over UDP. Only one client controls it at a time; like the robot, it
+// serves a second one in passive mode (or answers ConnectionBusy) and drops a client that is
+// silent for 2 s.
 #pragma once
 
 #include <atomic>
@@ -26,6 +26,8 @@ struct SimulatorOptions {
     std::uint16_t port = 8000;  // 0 picks a free port
     double motor_time_constant = 0.05;  // s
     std::chrono::milliseconds idle_timeout{2000};
+    // Answer a second client with ConnectionBusy instead of serving it in passive mode.
+    bool busy_message = false;
     std::chrono::milliseconds camera_period{100};
     std::uint32_t camera_width = 320;
     std::uint32_t camera_height = 240;

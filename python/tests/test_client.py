@@ -75,6 +75,9 @@ def test_errors(sim):
         with pytest.raises(robotino_api1.RobotinoError) as info:
             make_client(sim).connect()
         assert info.value.code == robotino_api1.ErrorCode.CONNECTION_BUSY
+        with make_client(sim, allow_passive=True) as watcher:
+            assert watcher.wait_for_update(1.0)
+            assert watcher.sensors().passive_mode
 
     robot = make_client(sim)
     with pytest.raises(IndexError):
