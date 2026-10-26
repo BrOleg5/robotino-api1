@@ -40,7 +40,8 @@ From the capture:
 4. The robot answers every IOControl with one IOStatus within 1.5–4 ms. OpenRobotinoAPI sends
    IOControl every 30 ms by default (`Com::setMinimumUpdateCycleTime`, at most 100 ms).
 
-The robot closes the connection about 2 s after the last message from the client. A second client
+Without IOControl the robot stops the motors almost at once but keeps the connection open: a
+client frozen for 3 s continues without errors. A second client
 gets ConnectionBusy (or the robot serves it in passive mode, see `passive_mode`).
 
 ## IOControl (client → robot)

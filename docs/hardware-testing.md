@@ -19,9 +19,16 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
    - `reset_motor_positions()` brings the positions to zero.
    - `set_brake(i, true)` stops the wheel.
 3. **Watchdog and disconnect**: set a velocity, then
-   - kill the program: the robot stops within about 2 s (robot side timeout);
-   - with `command_timeout = 0.5 s`, stop sending commands: the motors stop after 0.5 s;
-   - unplug the network for 5 s: the client reports errors and reconnects.
+   - kill the program: the robot stops at once (the OS closes the TCP connection and the robot
+     sees it; neither timeout is involved);
+   - freeze the program (Ctrl+Z or `kill -STOP` on Linux, "Suspend process" in Resource Monitor
+     on Windows): the connection stays open but IOControl stops; the robot stops almost at once
+     (robot side motor watchdog, well under 0.5 s). Resume it after 3 s (`fg`): the program
+     continues without errors, since the robot keeps the connection open;
+   - with `command_timeout = 0.5 s`, stop calling `set_velocity` while the program keeps running:
+     the motors stop after 0.5 s;
+   - unplug the network for 5 s: the robot stops almost at once; the client reports errors and
+     reconnects.
 4. **Second client**: connect a second program while the first one runs: it gets
    `ConnectionBusy` or `passive_mode == true`. Note which one.
 5. **Driving** (robot on the floor): `drive_square 172.26.1.1`. The robot drives a square of about
