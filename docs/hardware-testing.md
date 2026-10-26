@@ -40,8 +40,18 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
    0.5 m without turning; compare the odometry with a tape measure. If the sides are too short or
    long, check `DriveLayout::base_radius` (125 mm in OpenRobotinoAPI, 132 mm in the robot's
    `robotino.xml`).
-6. **IO**: digital outputs and relays (a multimeter or LEDs on the IO connector), analog inputs
-   (a voltage source, 0–10 V), power output (`set_power_output(0.5)`) and the encoder input.
+6. **IO**: `check_io 172.26.1.1` walks through the IO connector with a multimeter and a 0–10 V
+   voltage source, and prints PASS, FAIL or SKIP for each check. Section names after the
+   address run only those sections: `check_io 172.26.1.1 din ain`.
+   - `dout`, `relay`: the outputs are switched on one at a time; answer `y`/`n` to what the
+     multimeter shows (`s` skips, `q` quits).
+   - `din`: connect each input to 24 V and disconnect it; the program waits for the input to
+     change and checks that the others did not.
+   - `ain`: apply a voltage, watch the live reading, press Enter and type the multimeter value;
+     the average reading has to be within 0.2 V.
+
+   The power output (`set_power_output()`) and the encoder input are on the separate motor 4
+   connectors, not on the IO connector, and are not checked yet.
 7. **Camera**: `camera_dump 172.26.1.1`. If the PC firewall allows UDP port 8080, ten images are
    saved. Save the capture with camera traffic: it is the first one, so check the image header
    layout in [protocol.md](protocol.md) against it.
