@@ -59,7 +59,7 @@ typedef struct rapi1_options {
     int auto_reconnect;      /* default 1 */
     uint32_t command_timeout_ms; /* default 0 (off) */
     uint16_t image_port;     /* default 8080 */
-    double base_radius;      /* m, default 0.125 */
+    double base_radius;      /* m, default 0.132 */
     double wheel_radius;     /* m, default 0.040 */
     double gear_ratio;       /* default 16 */
     int allow_passive;       /* default 0: passive mode fails with RAPI1_ERROR_CONNECTION_BUSY */

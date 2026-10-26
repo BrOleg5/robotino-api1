@@ -13,7 +13,7 @@
 namespace robotino_api1 {
 
 struct DriveLayout {
-    double base_radius = 0.125;  // m, wheel contact point to robot center (robotino.xml on the robot may say 0.132)
+    double base_radius = 0.132;  // m, wheel contact point to robot center (measured; OpenRobotinoAPI uses 0.125)
     double wheel_radius = 0.040;  // m
     double gear_ratio = 16.0;
     // Wheel i rolls along (-sin(a_i), cos(a_i)) when its motor turns forward (as in OpenRobotinoAPI).

@@ -41,8 +41,8 @@ which are not checked yet.
    `connection closed`.
 5. **Driving** (robot on the floor): `drive_square 172.26.1.1`. The robot drives a square of about
    0.5 m without turning; compare the odometry with a tape measure. If the sides are too short or
-   long, check `DriveLayout::base_radius` (125 mm in OpenRobotinoAPI, 132 mm in the robot's
-   `robotino.xml`).
+   long, check `DriveLayout::base_radius`: the default is 132 mm, measured on a Robotino v1.6
+   (OpenRobotinoAPI uses 125 mm).
 6. **IO**: `check_io 172.26.1.1` walks through the IO connector with a multimeter and a 0–10 V
    voltage source, and prints PASS, FAIL or SKIP for each check. Section names after the
    address run only those sections: `check_io 172.26.1.1 din ain`. The terminals are in
