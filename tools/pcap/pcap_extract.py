@@ -85,15 +85,17 @@ def tcp_segments(path):
 def reassemble(path, port):
     """Returns {(src, dst): bytes} for the TCP streams to and from the given port.
 
-    Retransmitted and overlapping segments are dropped; only the first connection
-    of every endpoint pair is kept.
+    Retransmitted data is dropped, a segment that repeats received data and carries new data
+    (a TCP retransmission merging unacknowledged segments) contributes only the new part, and
+    segments that arrive ahead of a gap wait until it is filled. Only the first connection of
+    every endpoint pair is kept.
     """
     streams = {}
     for src, dst, seq, flags, payload in tcp_segments(path):
         if port not in (src[1], dst[1]):
             continue
         key = (src, dst)
-        stream = streams.setdefault(key, {"next": None, "data": bytearray()})
+        stream = streams.setdefault(key, {"next": None, "data": bytearray(), "pending": {}})
         if flags & 0x02:  # SYN consumes one sequence number.
             if stream["next"] is None:
                 stream["next"] = (seq + 1) & 0xFFFFFFFF
@@ -102,10 +104,20 @@ def reassemble(path, port):
             continue
         if stream["next"] is None:
             stream["next"] = seq
-        if seq != stream["next"]:
-            continue
-        stream["data"] += payload
-        stream["next"] = (seq + len(payload)) & 0xFFFFFFFF
+        stream["pending"][seq] = payload
+        progress = True
+        while progress:
+            progress = False
+            for pending_seq in list(stream["pending"]):
+                # Offset of the segment relative to the next expected byte, with wraparound.
+                offset = ((pending_seq - stream["next"] + 0x80000000) & 0xFFFFFFFF) - 0x80000000
+                if offset > 0:
+                    continue
+                data = stream["pending"].pop(pending_seq)
+                if len(data) > -offset:
+                    stream["data"] += data[-offset:]
+                    stream["next"] = (stream["next"] + len(data) + offset) & 0xFFFFFFFF
+                    progress = True
     return {key: bytes(s["data"]) for key, s in streams.items()}
 
 
