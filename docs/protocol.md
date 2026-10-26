@@ -69,9 +69,21 @@ ConnectionBusy; this was not seen in captures.
 | 56 | 20 | see below |
 
 The last 20 bytes are zeros in the r23 sources, but OpenRobotinoAPI 1.8.54 sends
-`00×13 00 00 80 3f 00 00 00`, i.e. `1.0f` at offset 69. *Unverified* layout consistent with
-that and with the fields of `SetState`: set odometry u8, odometry x, y, phi f32, NorthStar ceiling
-calibration f32 (default 1.0), 3 bytes padding.
+`00×13 00 00 80 3f 00 00 00`, i.e. `1.0f` at offset 69. Their layout, from a capture of
+`Odometry::set()` and `NorthStar::setCeilingCal()` calls:
+
+| Offset | Size | Field |
+|---|---|---|
+| 56 | u8 | set odometry: 1 in the one IOControl after `Odometry::set()`, then 0 |
+| 57 | f32 | odometry x |
+| 61 | f32 | odometry y |
+| 65 | f32 | odometry phi |
+| 69 | f32 | NorthStar ceiling calibration (default 1.0) |
+| 73 | 3 | zeros |
+
+x, y and phi are the arguments of `Odometry::set()` as passed, without unit conversion, and stay
+in later messages with the flag at 0. The ceiling calibration is sent in every message from the
+next one after `setCeilingCal()` on.
 
 ## IOStatus (robot → client)
 

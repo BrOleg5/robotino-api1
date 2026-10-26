@@ -39,6 +39,18 @@ TEST_CASE("IOControl decodes what it encodes") {
     CHECK(c.pid[0].kp == 255);
 }
 
+TEST_CASE("IOControl after Odometry::set and NorthStar::setCeilingCal in OpenRobotinoAPI") {
+    const auto captured = read_fixture("iocontrol_159.bin");
+    auto msg = decode_io_control(payload_of(captured));
+    REQUIRE(msg);
+    CHECK(msg->set_odometry);
+    CHECK(msg->odometry_x == 1234.5f);
+    CHECK(msg->odometry_y == -678.25f);
+    CHECK(msg->odometry_phi == 45.0f);
+    CHECK(msg->northstar_ceiling_cal == 1.25f);
+    CHECK(encode(*msg) == captured);
+}
+
 TEST_CASE("CameraControl at connect matches OpenRobotinoAPI") {
     CHECK(encode(CameraControl{}) == read_fixture("cameracontrol_0.bin"));
 }

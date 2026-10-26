@@ -51,9 +51,9 @@ struct IOControl {
     std::uint16_t image_port = 8080;
     NorthStarCommand northstar;
     P2Q p2q;
-    // The last 20 bytes are zero in the published sources (r23) but OpenRobotinoAPI 1.8.54
-    // sends 1.0f at offset 13. The layout below is inferred from that and not yet verified:
-    // set_odometry u8, odometry x/y/phi f32, NorthStar ceiling calibration f32, 3 bytes padding.
+    // The last 20 bytes (zero in the published sources, r23), as OpenRobotinoAPI 1.8.54 sends
+    // them: set_odometry u8, odometry x/y/phi f32, NorthStar ceiling calibration f32, 3 bytes
+    // padding. See docs/protocol.md.
     bool set_odometry = false;
     float odometry_x = 0.0f;
     float odometry_y = 0.0f;
