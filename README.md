@@ -48,7 +48,8 @@ default) and receives the readings. All methods are thread-safe. See
 
 Only one client controls the robot. The robot serves a second one in passive mode (readings
 arrive, commands are ignored); `connect()` reports this as `ConnectionBusy` unless
-`allow_passive` is set. After a lost connection the client keeps retrying while the robot is
+`allow_passive` is set; such a session ends with `ConnectionClosed` when the controlling client
+leaves, since the robot then stops updating its readings. After a lost connection the client keeps retrying while the robot is
 busy, since the robot holds a lost session for about 2 s.
 
 On Windows, connecting to a host where nothing listens on the port fails with `Timeout`

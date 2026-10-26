@@ -33,7 +33,9 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
      `ConnectionBusy`.
 4. **Second client**: start a second `drive_square` while the first one runs: its `connect()`
    fails with `ConnectionBusy` (the robot serves it in passive mode), and the first one keeps
-   driving.
+   driving. `print_sensors` started instead connects in passive mode and shows the
+   changing readings; when the first program ends, it stops within about 1 s with
+   `connection closed`.
 5. **Driving** (robot on the floor): `drive_square 172.26.1.1`. The robot drives a square of about
    0.5 m without turning; compare the odometry with a tape measure. If the sides are too short or
    long, check `DriveLayout::base_radius` (125 mm in OpenRobotinoAPI, 132 mm in the robot's

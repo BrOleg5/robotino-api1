@@ -47,8 +47,12 @@ a FIN followed at once by a RST. When the client closes the connection, the robo
 RST about 100 ms later.
 
 A second client connecting while a session is open was served in passive mode: the passive mode
-byte is set in Info and IOStatus, and the IOStatus carries zeros (update rate and motor positions
-included). The robot may also answer ConnectionBusy; this was not seen in captures.
+byte is set in Info and IOStatus, its IOControl is ignored, and its IOStatus is a copy of the last
+one sent to the controlling client. The robot reads the IO board only for the controlling client:
+while that one is frozen the passive client gets zeros (update rate and motor positions included),
+and after it leaves the passive client gets its last IOStatus over and over, with the board time
+standing still. The passive client does not take over control. The robot may also answer
+ConnectionBusy; this was not seen in captures.
 
 ## IOControl (client → robot)
 
