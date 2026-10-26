@@ -42,7 +42,8 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
    `robotino.xml`).
 6. **IO**: `check_io 172.26.1.1` walks through the IO connector with a multimeter and a 0–10 V
    voltage source, and prints PASS, FAIL or SKIP for each check. Section names after the
-   address run only those sections: `check_io 172.26.1.1 din ain`.
+   address run only those sections: `check_io 172.26.1.1 din ain`. The terminals are in
+   [io-connector.md](io-connector.md); `digital output 0` is terminal DO0.
    - `dout`, `relay`: the outputs are switched on one at a time; answer `y`/`n` to what the
      multimeter shows (`s` skips, `q` quits).
    - `din`: connect each input to 24 V and disconnect it; the program waits for the input to
