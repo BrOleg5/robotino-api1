@@ -17,9 +17,8 @@ Windows with MSVC).
 
 > **Status.** The protocol was checked byte for byte against traffic between OpenRobotinoAPI
 > 1.8.31 for Windows and a real robot. The following still has to be verified on a robot: the
-> motion commands, the camera stream (no capture with images is available) and the meaning of the
-> last 20 bytes of the IOControl message (see [docs/protocol.md](docs/protocol.md)). The checklist
-> is in [docs/hardware-testing.md](docs/hardware-testing.md).
+> motion commands and the camera stream (no capture with images is available). The checklist is
+> in [docs/hardware-testing.md](docs/hardware-testing.md).
 
 ## Usage
 
