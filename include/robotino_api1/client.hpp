@@ -33,7 +33,8 @@ struct ClientOptions {
     Milliseconds cycle{20};
     // Connection attempt and answer timeout.
     Milliseconds timeout{1000};
-    // Reconnect after the connection is lost (not after ConnectionBusy).
+    // Reconnect after the connection is lost, retrying while the robot is busy. connect() itself
+    // does not retry.
     bool auto_reconnect = true;
     // Stop the motors if no velocity was set for this long; 0 disables the watchdog.
     Milliseconds command_timeout{0};

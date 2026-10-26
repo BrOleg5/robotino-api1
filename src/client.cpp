@@ -298,11 +298,10 @@ struct Client::Impl {
 
     void run(net::TcpStream stream, protocol::MessageParser parser) {
         Milliseconds reconnect_delay = kMinReconnectDelay;
-        bool busy = false;
         auto next_cycle = Clock::now() + options.cycle;
         while (!stop) {
             if (!stream.connected()) {
-                if (!options.auto_reconnect || busy) {
+                if (!options.auto_reconnect) {
                     break;
                 }
                 set_state(ConnectionState::Connecting);
@@ -313,8 +312,8 @@ struct Client::Impl {
                     if (stop) {
                         break;
                     }
+                    // Also retry ConnectionBusy: the robot holds a lost session for about 2 s.
                     report(e);
-                    busy = e.code == ErrorCode::ConnectionBusy;
                     reconnect_delay = std::min(reconnect_delay * 2, kMaxReconnectDelay);
                     continue;
                 }
@@ -337,9 +336,8 @@ struct Client::Impl {
                     break;
                 }
                 report(e);
-                busy = e.code == ErrorCode::ConnectionBusy;
                 stream.close();
-                if (!options.auto_reconnect || busy) {
+                if (!options.auto_reconnect) {
                     break;
                 }
             }

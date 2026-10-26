@@ -197,6 +197,26 @@ TEST_CASE("Client reconnects after the connection is lost") {
     CHECK(client.wait_for_update(1000ms));
 }
 
+TEST_CASE("Reconnecting retries while another client controls the robot") {
+    sim::Simulator s(sim_options());
+    REQUIRE_FALSE(s.start());
+    Client client(client_options(s));
+    std::atomic<int> busy{0};
+    client.on_error([&](const Error& e) { busy += e.code == ErrorCode::ConnectionBusy; });
+    REQUIRE_FALSE(client.connect());
+
+    // Another client takes the robot while this one reconnects.
+    Client other(client_options(s));
+    s.kick();
+    CHECK(eventually([&] { return !other.connect(); }));
+    CHECK(eventually([&] { return busy > 1; }, 3000ms));
+    CHECK(client.connection_state() == ConnectionState::Connecting);
+
+    other.disconnect();
+    CHECK(eventually([&] { return client.connection_state() == ConnectionState::Connected; }, 4000ms));
+    CHECK(client.wait_for_update(1000ms));
+}
+
 TEST_CASE("Camera images arrive over UDP") {
     sim::Simulator s(sim_options());
     REQUIRE_FALSE(s.start());
