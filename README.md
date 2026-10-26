@@ -16,9 +16,10 @@ Windows with MSVC).
 - Robot emulator for development and tests without a robot
 
 > **Status.** The protocol was checked byte for byte against traffic between OpenRobotinoAPI
-> 1.8.31 for Windows and a real robot. The following still has to be verified on a robot: the
-> motion commands and the camera stream (no capture with images is available). The checklist is
-> in [docs/hardware-testing.md](docs/hardware-testing.md).
+> 1.8.31 for Windows and a real robot. On a Robotino v1.6 all steps of
+> [docs/hardware-testing.md](docs/hardware-testing.md) pass except these, which are not checked
+> yet: the camera stream (no supported camera was available, see the camera step), the power
+> output and the encoder input.
 
 ## Usage
 

@@ -6,6 +6,9 @@ the reference for fixing any mismatch.
 
 Put the robot on a stand with the wheels in the air for steps 2–4.
 
+On a Robotino v1.6 all steps pass except the camera, the power output and the encoder input,
+which are not checked yet.
+
 1. **Connection and readings**: `print_sensors 172.26.1.1`.
    - Info text appears (`iod: 695`, `firmware: 670`).
    - Battery voltage matches the robot display; touching the bumper changes `bumper`; a hand in
@@ -55,7 +58,8 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
    connectors, not on the IO connector, and are not checked yet.
 7. **Camera**: `camera_dump 172.26.1.1`. If the PC firewall allows UDP port 8080, ten images are
    saved. Save the capture with camera traffic: it is the first one, so check the image header
-   layout in [protocol.md](protocol.md) against it.
+   layout in [protocol.md](protocol.md) against it. The robot sees only old non-UVC cameras
+   supported by the gspca v1 driver; it does not detect newer UVC cameras. Not checked yet.
 8. **IOControl trailer**: in a capture of OpenRobotinoAPI with `Odometry::set()` or
    `NorthStar::setCeilingCal()` calls, check the layout of the last 20 bytes of IOControl with
    `tools/pcap/check_iocontrol_trailer.py capture.pcapng --odometry X Y PHI --ceiling-cal C`,
