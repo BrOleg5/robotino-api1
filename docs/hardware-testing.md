@@ -57,4 +57,9 @@ Put the robot on a stand with the wheels in the air for steps 2–4.
    saved. Save the capture with camera traffic: it is the first one, so check the image header
    layout in [protocol.md](protocol.md) against it.
 8. **IOControl trailer**: in a capture of OpenRobotinoAPI with `Odometry::set()` or
-   `NorthStar::setCeilingCal()` calls, check the layout of the last 20 bytes of IOControl.
+   `NorthStar::setCeilingCal()` calls, check the layout of the last 20 bytes of IOControl with
+   `tools/pcap/check_iocontrol_trailer.py capture.pcapng --odometry X Y PHI --ceiling-cal C`,
+   giving the values passed to the calls. It prints every distinct trailer and PASS or FAIL for
+   the layout in [protocol.md](protocol.md); on FAIL it shows at which offsets the values were
+   found. Checked with `Odometry::set(1234.5, -678.25, 45)` and `setCeilingCal(1.25)`;
+   [tests/data/iocontrol_159.bin](../tests/data/iocontrol_159.bin) comes from that capture.
